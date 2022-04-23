@@ -14,6 +14,7 @@ class Person:
         self.phone = phone
     def __str__(self):
         return "Name: {}, Age: {}, Phone: {}".format(self.name, self.age, self.phone)
+staff_list = []
 def Person(staff):
     def __init__(self, name, age, phone, salary, shift):
         self.name = name
@@ -30,6 +31,7 @@ def Person(Customer):
         self.phone = phone
     def __str__(self):
         return "Name: {}, Age: {}, Phone: {}".format(self.name, self.age, self.phone)
+Goods_list = []
 class Goods:
     def __init__(self, quantity, price, name, size, color):
         self.quantity = quantity
@@ -39,6 +41,7 @@ class Goods:
         self.color = color
     def __str__(self):
         return "Quantity: {}, Price: {}, Name: {}, Size: {}, Color: {}".format(self.quantity, self.price, self.name, self.size, self.color)
+orders_list = []
 def Order():
     def __init__(self, order_number, order_date, order_status):
         self.order_number = order_number
@@ -46,12 +49,22 @@ def Order():
         self.order_status = order_status
     def __str__(self):
         return "Order number: {}, Order date: {}, Order status: {}".format(self.order_number, self.order_date, self.order_status)
-def Monthly_report():
-    def __init__(self, total_sales, total_profit, total_orders, total_customers):
-        self.total_sales = total_sales
-        self.total_profit = total_profit
-        self.total_orders = total_orders
-        self.total_customers = total_customers
-    def __str__(self):
-        return "Total sales: {}, Total profit: {}, Total orders: {}, Total customers: {}".format(self.total_sales, self.total_profit, self.total_orders, self.total_customers)
-#if customer wanna refund, the order status will be refunded and customer will be lost 10% money for each order
+#total profit = total sales - total cost - total living cost - total salary
+def profit():
+    total_sales = 0
+    total_cost = 0
+    total_living_cost = 0
+    total_salary = 0
+    for i in range(len(orders_list)):
+        total_sales += orders_list[i].order_total
+    for i in range(len(staff_list)):
+        total_salary += staff_list[i].salary
+    for i in range(len(Goods_list)):
+        total_cost += Goods_list[i].quantity * Goods_list[i].price
+    for i in range(len(staff_list)):
+        if staff_list[i].shift == "Day":
+            total_living_cost += staff_list[i].salary * 0.1
+        elif staff_list[i].shift == "Night":
+            total_living_cost += staff_list[i].salary * 0.2
+    total_profit = total_sales - total_cost - total_living_cost - total_salary
+    return total_profit
