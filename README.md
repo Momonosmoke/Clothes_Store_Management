@@ -1,6 +1,6 @@
 # Clothes_Store_Management
 Group 7
-Members:
+With members:
 1. Nguyễn Tuấn Khải	BI11-116
 2. Trần Duy Hưng	BI11-105
 3. Nguyễn Quang Huy	BI11-113
