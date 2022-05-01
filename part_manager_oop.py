@@ -12,24 +12,24 @@ class Application(tk.Frame):
     def __init__(self, master):
         super().__init__(master)
         self.master = master
-        master.title('Seven Boutique')
+        master.title('Seven boutique')
         # Width height
         master.geometry("700x350")
         # Create widgets/grid
         self.create_widgets()
         # Init selected item var
-        self.selected_item = 0  
+        self.selected_item = 0
         # Populate initial list
         self.populate_list()
 
     def create_widgets(self):
-        # clothes
-        self.clothes_text = tk.StringVar()
-        self.clothes_label = tk.Label(
-            self.master, text='Clothes', font=('bold', 14), pady=20)
-        self.clothes_label.grid(row=0, column=0, sticky=tk.W)
-        self.clothes_entry = tk.Entry(self.master, textvariable=self.clothes_text)
-        self.clothes_entry.grid(row=0, column=1)
+        # Part
+        self.part_text = tk.StringVar()
+        self.part_label = tk.Label(
+            self.master, text='Part Name', font=('bold', 14), pady=20)
+        self.part_label.grid(row=0, column=0, sticky=tk.W)
+        self.part_entry = tk.Entry(self.master, textvariable=self.part_text)
+        self.part_entry.grid(row=0, column=1)
         # Customer
         self.customer_text = tk.StringVar()
         self.customer_label = tk.Label(
@@ -38,14 +38,6 @@ class Application(tk.Frame):
         self.customer_entry = tk.Entry(
             self.master, textvariable=self.customer_text)
         self.customer_entry.grid(row=0, column=3)
-        # Order_time
-        self.order_time_text = tk.StringVar()
-        self.order_time_label = tk.Label(
-            self.master, text='Order time', font=('bold', 14))
-        self.order_time_label.grid(row=2, column=0, sticky=tk.W)
-        self.order_time_entry = tk.Entry(
-            self.master, textvariable=self.order_time_text)
-        self.order_time_entry.grid(row=2, column=1)
         # Retailer
         self.retailer_text = tk.StringVar()
         self.retailer_label = tk.Label(
@@ -61,32 +53,39 @@ class Application(tk.Frame):
         self.price_label.grid(row=1, column=2, sticky=tk.W)
         self.price_entry = tk.Entry(self.master, textvariable=self.price_text)
         self.price_entry.grid(row=1, column=3)
-
-        # clothes list (listbox)
-        self.clothes_list = tk.Listbox(self.master, height=8, width=50, border=0)
-        self.clothes_list.grid(row=3, column=0, columnspan=3,
+        # Order time
+        self.order_time_text = tk.StringVar()
+        self.order_time_label = tk.Label(
+            self.master, text='Order Time', font=('bold', 14))
+        self.order_time_label.grid(row=2, column=0, sticky=tk.W)
+        self.order_time_entry = tk.Entry(
+            self.master, textvariable=self.order_time_text)
+        self.order_time_entry.grid(row=2, column=1)
+        # Parts list (listbox)
+        self.parts_list = tk.Listbox(self.master, height=8, width=50, border=0)
+        self.parts_list.grid(row=4, column=0, columnspan=3,
                              rowspan=6, pady=20, padx=20)
         # Create scrollbar
         self.scrollbar = tk.Scrollbar(self.master)
         self.scrollbar.grid(row=4, column=3)
-        # Set scrollbar to clothess
-        self.clothes_list.configure(yscrollcommand=self.scrollbar.set)
-        self.scrollbar.configure(command=self.clothes_list.yview)
+        # Set scrollbar to parts
+        self.parts_list.configure(yscrollcommand=self.scrollbar.set)
+        self.scrollbar.configure(command=self.parts_list.yview)
 
         # Bind select
-        self.clothes_list.bind('<<ListboxSelect>>', self.select_item)
+        self.parts_list.bind('<<ListboxSelect>>', self.select_item)
 
         # Buttons
         self.add_btn = tk.Button(
-            self.master, text="Add clothes", width=12, command=self.add_item)
+            self.master, text="Add Part", width=12, command=self.add_item)
         self.add_btn.grid(row=3, column=0, pady=20)
 
         self.remove_btn = tk.Button(
-            self.master, text="Remove clothes", width=12, command=self.remove_item)
+            self.master, text="Remove Part", width=12, command=self.remove_item)
         self.remove_btn.grid(row=3, column=1)
 
         self.update_btn = tk.Button(
-            self.master, text="Update clothes", width=12, command=self.update_item)
+            self.master, text="Update Part", width=12, command=self.update_item)
         self.update_btn.grid(row=3, column=2)
 
         self.exit_btn = tk.Button(
@@ -94,44 +93,45 @@ class Application(tk.Frame):
         self.exit_btn.grid(row=3, column=3)
 
     def populate_list(self):
-        # Delete items before update. So when you keep pressing it doesn't keep getting (show example by calling this twice)
-        self.clothes_list.delete(0, tk.END)
+        # Delete items before update. So when you keep pressing it doesnt keep getting (show example by calling this twice)
+        self.parts_list.delete(0, tk.END)
         # Loop through records
         for row in db.fetch():
             # Insert into list
-            self.clothes_list.insert(tk.END, row)
+            self.parts_list.insert(tk.END, row)
 
     # Add new item
     def add_item(self):
-        if self.clothes_text.get() == '' or self.customer_text.get() == '' or self.retailer_text.get() == '' or self.price_text.get() == '' or self.order_time_text.get() == '':
+        if self.part_text.get() == '' or self.customer_text.get() == '' or self.retailer_text.get() == '' or self.price_text.get() == '' or self.order_time_text.get() == '':
             messagebox.showerror(
                 "Required Fields", "Please include all fields")
             return
-        print(self.clothes_text.get())
+        print(self.part_text.get())
         # Insert into DB
-        db.insert(self.clothes_text.get(), self.customer_text.get(),
+        db.insert(self.part_text.get(), self.customer_text.get(),
                   self.retailer_text.get(), self.price_text.get(), self.order_time_text.get())
         # Clear list
-        self.clothes_list.delete(0, tk.END)
+        self.parts_list.delete(0, tk.END)
         # Insert into list
-        self.clothes_list.insert(tk.END, (self.clothes_text.get(), self.customer_text.get(
+        self.parts_list.insert(tk.END, (self.part_text.get(), self.customer_text.get(
         ), self.retailer_text.get(), self.price_text.get(), self.order_time_text.get()))
         self.clear_text()
         self.populate_list()
+
     # Runs when item is selected
     def select_item(self, event):
         # # Create global selected item to use in other functions
         # global self.selected_item
         try:
             # Get index
-            index = self.clothes_list.curselection()[0]
+            index = self.parts_list.curselection()[0]
             # Get selected item
-            self.selected_item = self.clothes_list.get(index)
+            self.selected_item = self.parts_list.get(index)
             # print(selected_item) # Print tuple
 
             # Add text to entries
-            self.clothes_entry.delete(0, tk.END)
-            self.clothes_entry.insert(tk.END, self.selected_item[1])
+            self.part_entry.delete(0, tk.END)
+            self.part_entry.insert(tk.END, self.selected_item[1])
             self.customer_entry.delete(0, tk.END)
             self.customer_entry.insert(tk.END, self.selected_item[2])
             self.retailer_entry.delete(0, tk.END)
@@ -151,13 +151,13 @@ class Application(tk.Frame):
 
     # Update item
     def update_item(self):
-        db.update(self.selected_item[0], self.clothes_text.get(
+        db.update(self.selected_item[0], self.part_text.get(
         ), self.customer_text.get(), self.retailer_text.get(), self.price_text.get(), self.order_time_text.get())
         self.populate_list()
 
     # Clear all text fields
     def clear_text(self):
-        self.clothes_entry.delete(0, tk.END)
+        self.part_entry.delete(0, tk.END)
         self.customer_entry.delete(0, tk.END)
         self.retailer_entry.delete(0, tk.END)
         self.price_entry.delete(0, tk.END)
